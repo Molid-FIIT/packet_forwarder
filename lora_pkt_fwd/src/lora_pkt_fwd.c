@@ -56,6 +56,7 @@ Maintainer: Michael Coracin
 #include "loragw_gps.h"
 #include "loragw_aux.h"
 #include "loragw_reg.h"
+#include "molid.h"
 
 /* -------------------------------------------------------------------------- */
 /* --- PRIVATE MACROS ------------------------------------------------------- */
@@ -1875,6 +1876,7 @@ void thread_up(void) {
                 break;
             }
         }
+        molid_log(p);
         pthread_mutex_unlock(&mx_meas_up);
     }
     MSG("\nINFO: End of upstream thread\n");
