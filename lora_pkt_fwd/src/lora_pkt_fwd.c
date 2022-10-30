@@ -1542,6 +1542,8 @@ void thread_up(void) {
         for (i=0; i < nb_pkt; ++i) {
             p = &rxpkt[i];
 
+            molid_log(p);
+
             /* Get mote information from current packet (addr, fcnt) */
             /* FHDR - DevAddr */
             mote_addr  = p->payload[1];
@@ -1876,7 +1878,6 @@ void thread_up(void) {
                 break;
             }
         }
-        molid_log(p);
         pthread_mutex_unlock(&mx_meas_up);
     }
     MSG("\nINFO: End of upstream thread\n");
