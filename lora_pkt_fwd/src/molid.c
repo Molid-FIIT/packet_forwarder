@@ -1,62 +1,52 @@
 #include "molid.h"
+#include <syslog.h>
 
-void create_log(struct lgw_pkt_rx_s* p, struct molid_log_s* m) {
-    /* MHDR - FType */
-    m.mhdr_ftype = p->payload[0] & 224;
+#define MAX_LENGTH 2000
 
-    if(m.mhdr_ftype == molid_ftype.JOIN_REQUEST) {
-        join_req_data(p, m);
-    }
-    else if (m.mhdr_ftype == molid_ftype.JOIN_ACCEPT) {
-        join_acc_data(p, m);
-    }
-    else {
-        fhdr_data(p, m);
-    }
-
-    // p->datarate // SF
-    // p->rssi
-    // p->snr
+void create_json(struct lgw_pkt_rx_s* p, char *buff, int *size){
+    *size = snprintf(
+        buff, 
+        MAX_LENGTH, 
+        "{\"freq_hz\": %u, \"if_chain\": \"%02x\", \"status\": \"%02x\", \"count_us\": %u, \"rf_chain\": \"%02x\", \"modulation\": \"%02x\", \"bandwidth\": \"%02x\", \"datarate\": %u, \"coderate\": \"%02x\", \"rssi\": %.4f, \"snr\": %.4f, \"snr_min\": %.4f, \"snr_max\": %.4f, \"crc\": \"%04x\", \"size\": %d}\0",
+        p->freq_hz,
+        p->if_chain,
+        p->status,
+        p->count_us,
+        p->rf_chain,
+        p->modulation,
+        p->bandwidth,
+        p->datarate,
+        p->coderate,
+        p->rssi,
+        p->snr,
+        p->snr_min,
+        p->snr_max,
+        p->crc,
+        p->size
+    );
 }
 
-void fhdr_data(struct lgw_pkt_rx_s* p, struct molid_log_s* m) {
-    /* FHDR - DevAddr */
-    m.fhdr_devaddr  = p->payload[1];
-    m.fhdr_devaddr |= p->payload[2] << 8;
-    m.fhdr_devaddr |= p->payload[3] << 16;
-    m.fhdr_devaddr |= p->payload[4] << 24;
+void create_syslog(char *buff, int size){
+    //EXAMPLE FROM: https://www.gnu.org/software/libc/manual/html_node/Syslog-Example.html
+    setlogmask (LOG_UPTO (LOG_NOTICE));
 
-    /* FHDR - fctrl */
-    m.fhdr_fctrl  = p->payload[5];
+    openlog ("exampleprog", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
 
-    /* FHDR - fcnt */
-    m.fhdr_fcnt   = p->payload[6];
-    m.fhdr_fcnt  |= p->payload[7] << 8;
+    syslog (LOG_NOTICE, "Program started by User %d", getuid ());
+    syslog (LOG_INFO, "A tree falls in a forest");
+
+    closelog ();
 }
 
-void join_req_data(struct lgw_pkt_rx_s* p, struct molid_log_s* m) {
-    /* JRQ - Eui */
-    m.join_eui  = p->payload[8];
-    m.join_eui  = p->payload[9] << 8;
-    m.join_eui  = p->payload[10] << 16;
-    m.join_eui  = p->payload[11] << 24;
-
-    /* JRQ - DevEui */
-    m.join_deveui  = p->payload[4];
-    m.join_deveui  = p->payload[5] << 8;
-    m.join_deveui  = p->payload[6] << 16;
-    m.join_deveui  = p->payload[7] << 24;
-
-    /* JRQ - DevNonce */
-    m.join_devnonce  = p->payload[17];
-    m.join_devnonce |= p->payload[18] << 8;
-}
-
-void join_acc_data(struct lgw_pkt_rx_s* p, struct molid_log_s* m) {
-}
 
 void molid_log(struct lgw_pkt_rx_s* p) {
-   struct molid_log_s molid_log;
+    int real_size = 0;
+    char *buff = calloc(MAX_LENGTH, sizeof(char));
+    if(buff == NULL)
+        return; //syslog - error not enough memory;
 
-   create_log(p, molid_log);
+    create_json(p, buff, &size);
+    create_syslog(buff, size);
+
+    free(buff);
 }
