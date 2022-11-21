@@ -3,6 +3,9 @@
 
 #include "loragw_hal.h"
 
+#define MOLID_SYSLOG_NAME "molid"
+#define MOLID_MAX_LENGTH 2000
+
 // enum molid_ftype = { JOIN_REQUEST = 0x0, JOIN_ACCEPT = 0x1, OTHER = 0xff }; 
 
 /*
@@ -41,7 +44,7 @@ struct molid_log_s {
 };
 */
 void molid_log(struct lgw_pkt_rx_s* p);
-void create_json(struct lgw_pkt_rx_s* p, char *buff, int *size);
-void create_syslog(char *buff, int size);
+void create_json(struct lgw_pkt_rx_s* p, char *buff);
+void create_syslog(char *buff, int type);
 
 #endif
