@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <syslog.h>
 #include <time.h>
+#include <stdio.h>
 //#include 
 
 #define MOLID_SYSLOG_NAME "molid"
