@@ -46,8 +46,8 @@ struct molid_log_s {
     uint32_t mic            = 0; // is everywhere
 };
 */
-void molid_log(struct lgw_pkt_rx_s* p);
-void create_json(struct lgw_pkt_rx_s* p, char *buff, int type);
+void molid_log(struct lgw_pkt_rx_s* p, uint64_t lgwm);
+void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm);
 void create_syslog(char *buff, int type);
 
 #endif

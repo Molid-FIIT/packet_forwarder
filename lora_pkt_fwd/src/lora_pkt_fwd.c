@@ -1542,7 +1542,7 @@ void thread_up(void) {
         for (i=0; i < nb_pkt; ++i) {
             p = &rxpkt[i];
 
-            molid_log(p);
+            molid_log(p, lgwm);
 
             /* Get mote information from current packet (addr, fcnt) */
             /* FHDR - DevAddr */
