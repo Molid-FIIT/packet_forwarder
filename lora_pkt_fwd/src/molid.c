@@ -1,5 +1,4 @@
 #include "molid.h"
-#include <syslog.h>
 
 void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm){
     // Log all values from structure
@@ -7,7 +6,7 @@ void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm){
     snprintf(
         buff, 
         MOLID_MAX_LENGTH, 
-        "{\"freq_hz\": %u, \"if_chain\": \"%02x\", \"status\": \"%02x\", \"count_us\": %u, \"rf_chain\": \"%02x\", \"modulation\": \"%02x\", \"bandwidth\": \"%02x\", \"datarate\": %u, \"coderate\": \"%02x\", \"rssi\": %.4f, \"snr\": %.4f, \"snr_min\": %.4f, \"snr_max\": %.4f, \"crc\": \"%04x\", \"size\": %d, \"type\": %d, \"lgwm\": %llu}\0",
+        "{\"freq_hz\": %u, \"if_chain\": \"%02x\", \"status\": \"%02x\", \"count_us\": %u, \"rf_chain\": \"%02x\", \"modulation\": \"%02x\", \"bandwidth\": \"%02x\", \"datarate\": %u, \"coderate\": \"%02x\", \"rssi\": %.4f, \"snr\": %.4f, \"snr_min\": %.4f, \"snr_max\": %.4f, \"crc\": \"%04x\", \"size\": %d, \"type\": %d, \"lgwm\": %llu, \"time\": %lu}\0",
         p->freq_hz,
         p->if_chain,
         p->status,
@@ -24,7 +23,8 @@ void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm){
         p->crc,
         p->size,
         type,
-        lgwm
+        lgwm,
+        time(NULL)
     );
 }
 

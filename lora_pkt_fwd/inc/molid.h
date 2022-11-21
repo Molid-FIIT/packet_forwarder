@@ -4,6 +4,8 @@
 #include "loragw_hal.h"
 #include <stdlib.h>
 #include <stddef.h>
+#include <syslog.h>
+#include <time.h>
 //#include 
 
 #define MOLID_SYSLOG_NAME "molid"
