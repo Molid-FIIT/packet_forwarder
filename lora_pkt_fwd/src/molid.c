@@ -30,7 +30,7 @@ void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm){
 
 void create_syslog(char *buff, int type){
     // https://www.gnu.org/software/libc/manual/html_node/syslog_003b-vsyslog.html
-    openlog(MOLID_SYSLOG_NAME, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_USER);
+    openlog(MOLID_SYSLOG_NAME, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
     syslog(type, "%s", buff);
     closelog();
 }
