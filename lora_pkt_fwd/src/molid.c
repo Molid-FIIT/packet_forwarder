@@ -1,5 +1,7 @@
 #include "molid.h"
 
+static pthread_mutex_t molid_lock;
+
 void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm){
     // Log all values from structure
     // https://github.com/Lora-net/lora_gateway/blob/master/libloragw/inc/loragw_hal.h
