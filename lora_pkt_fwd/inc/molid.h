@@ -2,6 +2,9 @@
 #define _LORA_PKTFWD_MOLID_H
 
 #include "loragw_hal.h"
+#include <stdlib.h>
+#include <stddef.h>
+//#include 
 
 #define MOLID_SYSLOG_NAME "molid"
 #define MOLID_MAX_LENGTH 2000
