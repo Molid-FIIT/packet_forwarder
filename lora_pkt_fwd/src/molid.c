@@ -1,13 +1,13 @@
 #include "molid.h"
 #include <syslog.h>
 
-void create_json(struct lgw_pkt_rx_s* p, char *buff){
+void create_json(struct lgw_pkt_rx_s* p, char *buff, int type){
     // Log all values from structure
     // https://github.com/Lora-net/lora_gateway/blob/master/libloragw/inc/loragw_hal.h
     snprintf(
         buff, 
         MOLID_MAX_LENGTH, 
-        "{\"freq_hz\": %u, \"if_chain\": \"%02x\", \"status\": \"%02x\", \"count_us\": %u, \"rf_chain\": \"%02x\", \"modulation\": \"%02x\", \"bandwidth\": \"%02x\", \"datarate\": %u, \"coderate\": \"%02x\", \"rssi\": %.4f, \"snr\": %.4f, \"snr_min\": %.4f, \"snr_max\": %.4f, \"crc\": \"%04x\", \"size\": %d}\0",
+        "{\"freq_hz\": %u, \"if_chain\": \"%02x\", \"status\": \"%02x\", \"count_us\": %u, \"rf_chain\": \"%02x\", \"modulation\": \"%02x\", \"bandwidth\": \"%02x\", \"datarate\": %u, \"coderate\": \"%02x\", \"rssi\": %.4f, \"snr\": %.4f, \"snr_min\": %.4f, \"snr_max\": %.4f, \"crc\": \"%04x\", \"size\": %d, \"type\": %d}\0",
         p->freq_hz,
         p->if_chain,
         p->status,
@@ -22,14 +22,15 @@ void create_json(struct lgw_pkt_rx_s* p, char *buff){
         p->snr_min,
         p->snr_max,
         p->crc,
-        p->size
+        p->size,
+        type
     );
 }
 
 void create_syslog(char *buff, int type){
     // https://www.gnu.org/software/libc/manual/html_node/syslog_003b-vsyslog.html
     openlog(MOLID_SYSLOG_NAME, LOG_CONS | LOG_PID | LOG_NDELAY, LOG_USER);
-    syslog(type, "%d - %s", getuid(), buff);
+    syslog(type, "%s", buff);
     closelog();
 }
 
@@ -50,7 +51,7 @@ void molid_log(struct lgw_pkt_rx_s* p) {
     else if(type == 1 || type == 2 || type == 3 || type == 4 || type == 5)
         syslog_type = LOG_INFO;
 
-    create_json(p, buff);
+    create_json(p, buff, type);
     create_syslog(buff, syslog_type);
 
     free(buff);

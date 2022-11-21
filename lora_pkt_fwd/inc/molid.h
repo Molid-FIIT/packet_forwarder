@@ -47,7 +47,7 @@ struct molid_log_s {
 };
 */
 void molid_log(struct lgw_pkt_rx_s* p);
-void create_json(struct lgw_pkt_rx_s* p, char *buff);
+void create_json(struct lgw_pkt_rx_s* p, char *buff, int type);
 void create_syslog(char *buff, int type);
 
 #endif
