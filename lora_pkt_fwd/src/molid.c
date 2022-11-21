@@ -28,11 +28,13 @@ void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm){
     );
 }
 
-void create_syslog(char *buff, int type){
+void create_syslog(char *buff){
+    pthread_mutex_lock(&lock);
     // https://www.gnu.org/software/libc/manual/html_node/syslog_003b-vsyslog.html
-    openlog(MOLID_SYSLOG_NAME, 0, LOG_LOCAL1);
-    syslog(type, "%s", buff);
-    closelog();
+    FILE *f = fopen("/var/log/molid.log", "a");
+    fputs(buff, f);
+    fclose(f);
+    pthread_mutex_unlock(&lock);
 }
 
 
@@ -43,17 +45,9 @@ void molid_log(struct lgw_pkt_rx_s* p, uint64_t lgwm) {
 
     // Determine the type of packet
     int type = p->payload[0] >> 5;
-    int syslog_type = LOG_DEBUG;
-    // As per agreed upon types, only 
-    // JOIN REQ should have LOG_NOTICE type
-    if(type == 0)
-        syslog_type = LOG_NOTICE;
-    // Otherwise LOG_INFO
-    else if(type == 1 || type == 2 || type == 3 || type == 4 || type == 5)
-        syslog_type = LOG_INFO;
 
     create_json(p, buff, type, lgwm);
-    create_syslog(buff, syslog_type);
+    create_syslog(buff);
 
     free(buff);
     return;
