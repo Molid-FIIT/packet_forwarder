@@ -29,12 +29,12 @@ void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm){
 }
 
 void create_syslog(char *buff){
-    pthread_mutex_lock(&lock);
+    pthread_mutex_lock(&molid_lock);
     // https://www.gnu.org/software/libc/manual/html_node/syslog_003b-vsyslog.html
     FILE *f = fopen("/var/log/molid.log", "a");
     fputs(buff, f);
     fclose(f);
-    pthread_mutex_unlock(&lock);
+    pthread_mutex_unlock(&molid_lock);
 }
 
 

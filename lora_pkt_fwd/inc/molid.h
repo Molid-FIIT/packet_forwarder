@@ -13,7 +13,7 @@
 #define MOLID_SYSLOG_NAME "molid"
 #define MOLID_MAX_LENGTH 2000
 
-pthread_mutex_t lock;
+pthread_mutex_t molid_lock;
 
 // enum molid_ftype = { JOIN_REQUEST = 0x0, JOIN_ACCEPT = 0x1, OTHER = 0xff }; 
 
