@@ -62,7 +62,7 @@ void create_syslog(char *buff){
     pthread_mutex_unlock(&molid_lock);
 }
 
-void get_gps(double *lat, double lon){
+void get_gps(double *lat, double *lon){
     if(access("location.cfg", R_OK) == 0){
         FILE *f = fopen("location.cfg");
         fscanf(f, "%lf %lf", lat, lon);
