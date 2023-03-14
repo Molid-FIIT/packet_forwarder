@@ -48,7 +48,7 @@ void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm, do
         type,
         lgwm,
         lat,
-        lon
+        lon,
         time(NULL)
     );
 }
