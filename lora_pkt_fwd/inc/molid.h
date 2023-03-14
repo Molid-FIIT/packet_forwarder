@@ -2,6 +2,7 @@
 #define _LORA_PKTFWD_MOLID_H
 
 #include "loragw_hal.h"
+#include <unistd.h>         /* access */
 #include <stdlib.h>
 #include <stddef.h>
 #include <syslog.h>
@@ -51,7 +52,7 @@ struct molid_log_s {
 };
 */
 void molid_log(struct lgw_pkt_rx_s* p, uint64_t lgwm);
-void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm);
+void create_json(struct lgw_pkt_rx_s* p, char *buff, int type, uint64_t lgwm, double lat, double lon);
 void create_syslog(char *buff);
 
 #endif
